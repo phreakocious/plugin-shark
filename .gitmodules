@@ -1,0 +1,12 @@
+[submodule "gd_l4"]
+	path = gd_l4
+	url = git@github.com:phreakocious/gd_l4.git
+[submodule "gd_tcflag"]
+	path = gd_tcflag
+	url = git@github.com:phreakocious/gd_tcflag.git
+[submodule "wireshark-plugins"]
+	path = wireshark-plugins
+	url = https://github.com/kaos/wireshark-plugins.git
+[submodule "wireshark-nmea"]
+	path = wireshark-nmea
+	url = https://github.com/kmpm/wireshark-nmea
