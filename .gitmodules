@@ -10,3 +10,9 @@
 [submodule "wireshark-nmea"]
 	path = wireshark-nmea
 	url = https://github.com/kmpm/wireshark-nmea
+[submodule "redis-wireshark"]
+	path = redis-wireshark
+	url = https://github.com/jzwinck/redis-wireshark.git
+[submodule "wireshark-tcpextend"]
+	path = wireshark-tcpextend
+	url = https://github.com/gaddman/wireshark-tcpextend.git
