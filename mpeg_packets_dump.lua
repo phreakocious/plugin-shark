@@ -9,11 +9,11 @@
 -- 4. Capture some traffic which includes some MPEG transport packets, for
 --    example, it has been tested with MPEG transmitted via UDP multicast.
 -- 5. Stop the capture, and select Tools -> Dump MPEG TS Packets
--- 6. Enter the file where the mpeg stream should be saved. 
+-- 6. Enter the file where the mpeg stream should be saved.
 -- 7. In order to select only one of many streams, enter a wireshark filter
 --    expression, or you can leave the filter blank.
--- 8. Press okay. Any MPEG packets in the current capture which were detected 
---    by the MPEG dissector and that match your filter will be dumped to 
+-- 8. Press okay. Any MPEG packets in the current capture which were detected
+--    by the MPEG dissector and that match your filter will be dumped to
 --    your output file.
 --
 -- Tested with Wireshark 1.4.3
@@ -25,7 +25,7 @@
 
 -- only works in wireshark, not tshark
 if not GUI_ENABLED then
-	print("mpeg_packets_dump.lua only works in Wireshark")
+	io.stderr:write("mpeg_packets_dump.lua only works in Wireshark\n")
 	return
 end
 
@@ -42,7 +42,7 @@ local function init_payload_dump(file,filter)
 	local packet_count = 0
 	local tap = Listener.new(nil,filter)
 	local myfile = assert(io.open(file, "w+b"))
-	
+
 	-- this function is going to be called once each time our filter matches
 	function tap.packet(pinfo,tvb)
 
@@ -59,7 +59,7 @@ local function init_payload_dump(file,filter)
 			end
 		end
 	end
-	
+
 	-- re-inspect all the packets that are in the current capture, thereby
 	-- triggering the above tap.packet function
 	retap_packets()
@@ -71,7 +71,7 @@ local function init_payload_dump(file,filter)
 end
 
 -- show this dialog when the user select "Dump" from the Tools menu
-local function begin_dialog_menu()	
+local function begin_dialog_menu()
 	new_dialog("Dump MPEG TS Packets",init_payload_dump,"Output file","Packet filter (optional)\n\nExamples:\nip.dst == 225.1.1.4\nmp2t\nmp2t.pid == 0x300")
 end
 
@@ -93,15 +93,15 @@ end
 
 tobinary = function (hexbytes)
 -- this function converts a hex-string to raw bytes
-	
+
 	local binary = {}
 	local sz = 1
-	
+
 	for i=1, string.len(hexbytes), 2 do
 		binary[sz] = string.char( 16 * hex( string.byte(hexbytes,i) ) + hex( string.byte(hexbytes,i+1) ) )
 		sz = sz + 1
 	end
 
 	return table.concat(binary)
-	
+
 end
