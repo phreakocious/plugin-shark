@@ -16,3 +16,6 @@
 [submodule "wireshark-tcpextend"]
 	path = wireshark-tcpextend
 	url = https://github.com/gaddman/wireshark-tcpextend.git
+[submodule "wireshark-http-extra"]
+	path = wireshark-http-extra
+	url = https://github.com/shomeax/wireshark-http-extra.git
