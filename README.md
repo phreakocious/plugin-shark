@@ -1,6 +1,8 @@
 # plugin-shark
 **A collection of useful wireshark/tshark plugins**
-\*Plugins directly included in this repo have been tested and verified as functoning
+
+\*Plugins directly included in this repo have been tested and verified as functioning.
+
 If they are available on GitHub, they are included as submodules.  Others have been copied from the sources cited below.
 
 | PLUGIN | SOURCE |
@@ -14,6 +16,7 @@ If they are available on GitHub, they are included as submodules.  Others have b
 ### Untested Plugins
 
 **Disclaimer: plugins listed below have not been tested!**
+
 \*\*Denotes that plugin was written in a language other than Lua.
 
 | PLUGIN | DESCRIPTION |
