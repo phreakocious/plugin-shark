@@ -16,7 +16,7 @@ Wireshark loads every `.lua` file under its personal Lua plugin folder, subfolde
 | PLUGIN | WHAT IT ADDS | SOURCE | CHECKED |
 | ------ | ------------ | ------ | ------- |
 | [gd_l4](gd_l4/gd_l4.lua) | L4 stream index and protocol name, for one column across all protocols | [gr8drag1/gd_l4](https://github.com/gr8drag1/gd_l4), vendored | dissects test.pcap |
-| [gd_tcflag](gd_tcflag/gd_tcflag.lua) | Per-TCP-conversation flags and stats, so a display filter can select whole streams | [gr8drag1/gd_tcflag](https://github.com/gr8drag1/gd_tcflag) r26, vendored | dissects test.pcap |
+| [gd_tcflag](gd_tcflag/gd_tcflag.lua) | Per-TCP-conversation flags and stats, so a display filter can select whole streams | [gr8drag1/gd_tcflag](https://github.com/gr8drag1/gd_tcflag) r27, vendored | dissects test.pcap |
 | [TCPextend](wireshark-tcpextend/TCPextend-post_dissector.lua) | Bytes in flight, bytes since push and per-sender delta on every packet | [gaddman/wireshark-tcpextend](https://github.com/gaddman/wireshark-tcpextend), vendored | dissects test.pcap |
 | [http-extra](wireshark-http-extra/http_response_patcher.lua) | Request method, URI and host on each HTTP response; full URL on both | [shomeax/wireshark-http-extra](https://github.com/shomeax/wireshark-http-extra), vendored | dissects test.pcap |
 | [Cap'n Proto RPC](wireshark-plugins/plugins) | Cap'n Proto RPC dissector | [kaos/wireshark-plugins](https://github.com/kaos/wireshark-plugins), submodule | loads |
