@@ -17,7 +17,7 @@ HOME=$home tshark -G plugins >"$home/plugins" 2>"$home/err" || { cat "$home/err"
 HOME=$home tshark -r "$repo/test.pcap" -V >"$home/dissect" 2>>"$home/err" || { cat "$home/err"; exit 1; }
 HOME=$home tshark -r "$repo/test.pcap" -V -2 -R frame >>"$home/dissect" 2>>"$home/err" || { cat "$home/err"; exit 1; }
 if [ -s "$home/err" ]; then cat "$home/err"; exit 1; fi
-if grep 'Lua Error' "$home/dissect"; then exit 1; fi
+if grep -q '^Lua Error' "$home/dissect"; then grep '^Lua Error' "$home/dissect" | sort | uniq -c; exit 1; fi
 
 find "$repo" -name .git -prune -o -name '*.lua' -print | sed 's#.*/##' | sort >"$home/want"
 awk -F'\t' -v p="$home/" '$3 == "Lua script" && index($4, p) == 1 {print $1}' "$home/plugins" | sort >"$home/got"
