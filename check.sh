@@ -9,9 +9,12 @@ trap 'rm -rf "$home"' EXIT
 mkdir -p "$home/.local/lib/wireshark"
 ln -s "$repo" "$home/.local/lib/wireshark/plugins"
 
-tshark --version | head -1
+HOME=$home tshark --version | head -1
 HOME=$home tshark -G plugins >"$home/plugins" 2>"$home/err" || { cat "$home/err"; exit 1; }
+# One pass and two (-2): some post-dissectors only build their tree when
+# pinfo.visited is set, which a single pass never does.
 HOME=$home tshark -r "$repo/test.pcap" -V >"$home/dissect" 2>>"$home/err" || { cat "$home/err"; exit 1; }
+HOME=$home tshark -r "$repo/test.pcap" -V -2 >>"$home/dissect" 2>>"$home/err" || { cat "$home/err"; exit 1; }
 if [ -s "$home/err" ]; then cat "$home/err"; exit 1; fi
 if grep 'Lua Error' "$home/dissect"; then exit 1; fi
 
