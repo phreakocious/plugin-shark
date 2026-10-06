@@ -1,3 +1,4 @@
+-- Vendored from https://github.com/gaddman/wireshark-tcpextend (1db6097). Modified 2026-10-05 for Wireshark 4.x; see git log.
 -- A Wireshark LUA script to display some additional TCP information.
 -- This is a post-dissector script which adds a new tree to the Wireshark view, _TCP extended info_.
 --
@@ -145,7 +146,7 @@ function p_TCPextend.dissector(buffer,pinfo,tree)
 				-- calculate time since last packet from this endpoint, and store as NStime (seconds,nanoseconds)
 				sdelta = frame_time - stm_data.server_time[tcp_stream]
 				local secs, frac = math.modf(sdelta)
-				pkt_data.delta[pkt_no] = NSTime(secs, frac * 10^9)
+				pkt_data.delta[pkt_no] = NSTime(secs, math.floor(frac * 10^9))
 				-- set current, and then calculate new bytes since last push
 				sbsp = tcp_lseq - stm_data.server_pseq[tcp_stream]
 				cbsp = stm_data.client_bsp[tcp_stream]
@@ -177,7 +178,7 @@ function p_TCPextend.dissector(buffer,pinfo,tree)
 				-- calculate time since last packet from this endpoint, and store as NStime (seconds,nanoseconds)
 				cdelta = frame_time - stm_data.client_time[tcp_stream]
 				local secs, frac = math.modf(cdelta)
-				pkt_data.delta[pkt_no] = NSTime(secs, frac * 10^9)
+				pkt_data.delta[pkt_no] = NSTime(secs, math.floor(frac * 10^9))
 				-- set current, and then calculate new bytes since last push
 				cbsp = tcp_lseq - stm_data.client_pseq[tcp_stream]
 				sbsp = stm_data.server_bsp[tcp_stream]
@@ -226,10 +227,12 @@ function p_TCPextend.dissector(buffer,pinfo,tree)
 			
             -- f_tcp_acks_frm not always available, even if an ACK. If so then pba will be null and not added to the tree
 			-- TODO: calculate from SEQ/ACK instead of using Wireshark's builtin tcp.analysis.acks_frame
-			req_frm = f_tcp_acks_frm().value
-			pkt_data.pba[pkt_no] = pkt_no - req_frm
-			-- update the request packet for this ACK response
-			pkt_data.ack_frame[req_frm] = pkt_no
+			if f_tcp_acks_frm() then
+				req_frm = f_tcp_acks_frm().value
+				pkt_data.pba[pkt_no] = pkt_no - req_frm
+				-- update the request packet for this ACK response
+				pkt_data.ack_frame[req_frm] = pkt_no
+			end
 
 		end	-- if packet not visited
 		

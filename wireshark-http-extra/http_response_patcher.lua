@@ -1,3 +1,4 @@
+-- Vendored from https://github.com/shomeax/wireshark-http-extra (9a6f58b). Modified 2026-10-05 for Wireshark 4.x; see git log.
 do
 
         local http_wrapper_proto = Proto("http_resp", "Upstream HTTP request")
@@ -31,8 +32,8 @@ do
             resp_map = {}
         end
 
-        local function optional_port(tcp_port)
-            if tcp_port ~= 443 and tcp_port ~= 80 then
+        local function optional_port(host, tcp_port)
+            if tcp_port ~= 443 and tcp_port ~= 80 and not host:find(":%d+$") then
                 return ":" .. tcp_port
             end
             return ""
@@ -64,7 +65,7 @@ do
                     else
                         host = f_ip_dsthost().value
                     end
-                    URL = scheme_by_port (tcp_port) .. host .. optional_port(tcp_port) .. f_req_uri().value
+                    URL = scheme_by_port (tcp_port) .. host .. optional_port(host, tcp_port) .. f_req_uri().value
 
                     if not pinfo.visited then
                         if stream_map[stream_n] == nil then
@@ -75,7 +76,7 @@ do
                         request_n = stream_map[stream_n][1] + 1
                         stream_map[stream_n][1] = request_n
 
-                        stream_map[stream_n][3][ request_n ] = {f_req_meth().value, f_req_uri().value, f_req_ver().value, f_req_host().value}
+                        stream_map[stream_n][3][ request_n ] = {f_req_meth().value, f_req_uri().value, f_req_ver().value, f_req_host() and f_req_host().value}
                     end
                 end
 
@@ -92,12 +93,12 @@ do
                             resp_map[pinfo.number] = response_n
                         end
                     else
-                        response_n = resp_map[pinfo.number]
+                        response_n = resp_map[pinfo.number] or 0
                     end
 
                     tcp_port = f_tcp_srcport().value
                     if response_n > 0 then
-                        local subtree = treeitem:add(http_wrapper_proto, nil)
+                        local subtree = treeitem:add(http_wrapper_proto)
                         local data = stream_map[stream_n][3][response_n]
                         if data then
                             subtree:add(http_wrapper_proto.fields.re_req_method, data[1]):set_generated()
@@ -112,7 +113,7 @@ do
                                 host = f_ip_srchost().value
                             end
 
-                            URL = scheme_by_port(tcp_port) .. host .. optional_port(tcp_port) .. data[2]
+                            URL = scheme_by_port(tcp_port) .. host .. optional_port(host, tcp_port) .. data[2]
                         else
                             warn("HTTP request data lost (" .. stream_n .. "," .. response_n .. ")")
                         end
@@ -120,7 +121,7 @@ do
                 end
 
                 if URL then
-                    local extratree = treeitem:add(http_extra_proto, nil)
+                    local extratree = treeitem:add(http_extra_proto)
                     extratree:add(http_extra_proto.fields.URL, URL):set_generated()
                 end
         end

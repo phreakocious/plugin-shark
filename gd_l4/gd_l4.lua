@@ -1,3 +1,4 @@
+-- Vendored from https://github.com/gr8drag1/gd_l4 (6e5e4d7). Modified 2019-07-28: F5 trailer fields removed.
 -- Post-dissector creating subtree "gd_l4" with L4 stream id and IP protocol
 -- name. If the IP protocol is not identified, but L4 stream id is present,
 -- then the name is set to either "T+" or "U+". If IP protocol field is not
