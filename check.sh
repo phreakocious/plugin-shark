@@ -20,6 +20,13 @@ HOME=$home tshark -r "$repo/test.pcap" -V -2 -R frame >>"$home/dissect" 2>>"$hom
 HOME=$home tshark -r "$repo/test.pcap" -q -n -o tcp.calculate_timestamps:TRUE \
   -X lua_script:"$repo/tcp_stats.lua.disabled" >"$home/tcp_stats" 2>>"$home/err" || { cat "$home/err"; exit 1; }
 grep -q '^Stream ' "$home/tcp_stats" || { echo "tcp_stats printed no streams"; cat "$home/tcp_stats"; exit 1; }
+# TLSextend fails silently (state 0 everywhere) when its first pass breaks.
+# test.pcap has one full TLS handshake (state 3) and one unanswered
+# ClientHello (state 1).
+for s in 1 3; do
+  HOME=$home tshark -r "$repo/test.pcap" -2 -R frame -Y "TLSextend.state==$s" 2>>"$home/err" | grep -q . ||
+    { echo "TLSextend: no stream with state $s"; cat "$home/err"; exit 1; }
+done
 if [ -s "$home/err" ]; then cat "$home/err"; exit 1; fi
 if grep -q '^Lua Error' "$home/dissect"; then grep '^Lua Error' "$home/dissect" | sort | uniq -c; exit 1; fi
 
