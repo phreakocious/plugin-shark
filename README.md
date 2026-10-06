@@ -24,7 +24,7 @@ Wireshark loads every `.lua` file under its personal Lua plugin folder, subfolde
 | [MPEG2 TS dump](mpeg_packets_dump.lua) | *Tools → Dump MPEG TS Packets* writes MPEG TS packets to a file (GUI only) | [Cisco](https://www.cisco.com/c/en/us/support/docs/broadband-cable/cable-modem-termination-systems-cmts/214210-convert-a-sniffer-trace-to-mpeg-video.html) | loads |
 | [TCP statistics](tcp_stats.lua.disabled) | Per-stream TCP report: MSS, window scaling, SACK, iRTT, worst delta and window | [Wireshark wiki](https://gitlab.com/wireshark/wireshark/-/wikis/Contrib) | runs on test.pcap |
 
-*Vendored* means copied into this repo and patched where Wireshark 4.x needed it. The first line of each vendored file names its upstream commit; `git log` has the changes. Vendored plugins keep their upstream license (GPL). The rest of the repo is BSD-2-Clause.
+*Vendored* means copied into this repo and patched where Wireshark 4.x needed it. The first line of each vendored file names its upstream commit; `git log` has the changes. Every third-party file keeps its author's license: GPL for the vendored plugins; the Lync plugin's header forbids commercial use without its author's consent; the MPEG dump and TCP statistics scripts state no license. The BSD-2-Clause [LICENSE](LICENSE) covers only what this repo adds: `check.sh`, `test.pcap`, this README and `preferences.plugin-shark`.
 
 TCP statistics prints a report, so it would print into every tshark run if Wireshark auto-loaded it. Its file name does not end in `.lua`, so run it on demand:
 
