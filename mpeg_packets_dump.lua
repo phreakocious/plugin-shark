@@ -25,7 +25,6 @@
 
 -- only works in wireshark, not tshark
 if not GUI_ENABLED then
-	io.stderr:write("mpeg_packets_dump.lua only works in Wireshark\n")
 	return
 end
 
